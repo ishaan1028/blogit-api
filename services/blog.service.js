@@ -112,8 +112,9 @@ module.exports = {
             }
 
             if (req.query.keyword) {
-                blogs = blogs.filter(b => b.title.includes(req.query.keyword) ||
-                    b.body.includes(req.query.keyword));
+                blogs = blogs.filter(b =>
+                    b.title.toLowerCase().includes(req.query.keyword.toLowerCase()) ||
+                    b.body.toLowerCase().includes(req.query.keyword.toLowerCase()));
             }
 
             res.send(blogs);

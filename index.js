@@ -12,37 +12,46 @@ const commentRoute = require("./routes/comment.route");
 
 dotenv.config();
 
-// Connecting to mongoDb Atlas
-mongoose.connect(process.env.MONGO_URL,
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    }
-);
+(async () => {
+  try {
+    console.log("Connecting to mongo...");
 
-console.log("Connected to mongo!");
+    // Connecting to mongoDb Atlas
+    await mongoose.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-const app = express();
+    console.log("Connected to mongo!");
 
-// Middlewares
-app.use(cors({
-    origin: process.env.FRONTEND
-}));
+    const app = express();
 
-app.use(express.json());
+    // Middlewares
+    app.use(
+      cors({
+        origin: process.env.FRONTEND,
+      })
+    );
 
-app.use(helmet());
+    app.use(express.json());
 
-app.use(morgan("common"));
+    app.use(helmet());
 
-app.use("/auth", authRoute);
+    app.use(morgan("common"));
 
-app.use("/users", userRoute);
+    app.use("/auth", authRoute);
 
-app.use("/blogs", blogRoute);
+    app.use("/users", userRoute);
 
-app.use("/comments", commentRoute);
+    app.use("/blogs", blogRoute);
 
-app.listen(process.env.PORT || 3001, () => {
-    console.log("Server running!");
-});
+    app.use("/comments", commentRoute);
+
+    app.listen(process.env.PORT || 3001, () => {
+      console.log("Server running!");
+    });
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+})();
